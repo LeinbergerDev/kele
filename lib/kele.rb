@@ -38,4 +38,22 @@ class Kele
     # in the irb console the @user attribute is of a class hash.
     # puts @user.class
   end
+
+  def get_mentor_availability
+    # use the mentor id listed in the user data to find the mentors availability
+    # this is another get request.
+    # get the mentor id
+    # note that the @user has is a hash of hashes.  The mentor_id was within the
+    # current_enrollment hash.
+    current_enrollment = @user['current_enrollment']
+    mentor_id = current_enrollment['mentor_id']
+
+    # use the get method to get a response to our get request
+    response = self.class.get("https://www.bloc.io/api/v1/mentors/#{mentor_id}/student_availability", headers: { "authorization" => @auth_token })
+
+    # parse the body to a ruby array.
+    @availability = JSON.parse(response.body)
+    # verified that the @availability is of class array.
+    # puts @availability.class
+  end
 end
