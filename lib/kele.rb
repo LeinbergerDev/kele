@@ -2,11 +2,13 @@
 # Add require statements for HTTParty and json
 require 'HTTParty'
 require 'json'
+require './lib/roadmap'
 
 class Kele
   # HTTParty needs to be included
   include HTTParty
   include JSON
+  include Roadmap
   # set the base_uri for api. Using this was causing an error for port :80.  Try it from homepage
   # it could be caused by the work firewall.
   base_uri = "https://www.bloc.io/api/v1"
@@ -56,4 +58,6 @@ class Kele
     # verified that the @availability is of class array.
     # puts @availability.class
   end
+
+
 end
