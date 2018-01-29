@@ -48,10 +48,10 @@ class Kele
     # note that the @user has is a hash of hashes.  The mentor_id was within the
     # current_enrollment hash.
     current_enrollment = @user['current_enrollment']
-    mentor_id = current_enrollment['mentor_id']
+    @mentor_id = current_enrollment['mentor_id']
 
     # use the get method to get a response to our get request
-    response = self.class.get("https://www.bloc.io/api/v1/mentors/#{mentor_id}/student_availability", headers: { "authorization" => @auth_token })
+    response = self.class.get("https://www.bloc.io/api/v1/mentors/#{@mentor_id}/student_availability", headers: { "authorization" => @auth_token })
 
     # parse the body to a ruby array.
     @availability = JSON.parse(response.body)
@@ -59,5 +59,26 @@ class Kele
     # puts @availability.class
   end
 
+  def get_messages(page_id = nil)
+    address = "https://www.bloc.io/api/v1/message_threads"
+    response = self.class.get(address, query: { page: page_id }, headers: { authorization: @auth_token })
+    data = JSON.parse(response.body)
+    @messages = data
+  end
 
+
+  # k.create_message("jason@leinbergerdev.com", 2290632, "26cf9eb8-87c5-4478-a1ee-f31fc5c32cf6", "test send message api", "this is a test.  should it not be a test importand information would follow." )
+  # k.create_message("jason@leinbergerdev.com", 2290632, nil, "test send message api", "this is a test.  should it not be a test importand information would follow." )
+  def create_message(sender, recipient_id = nil, token = nil, subject, message)
+
+    address = "https://www.bloc.io/api/v1/messages"
+    if token == nil
+      puts "token is nill"
+      response = self.class.post("https://www.bloc.io/api/v1/messages", body: {sender: sender, recipient_id: recipient_id,  subject: subject, 'stripped-text' => message}, headers: { authorization: @auth_token })
+    else
+      puts "message has a token"
+      response = self.class.post("https://www.bloc.io/api/v1/messages", body: { sender: sender, recipient_id: recipient_id, token: token, subject: subject,  'stripped-text' => message }, headers: { authorization: @auth_token })
+    end
+
+  end
 end
