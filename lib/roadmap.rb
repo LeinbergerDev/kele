@@ -17,9 +17,16 @@ module Roadmap
 
     @checkpoint = JSON.parse(response.body)
   end
-# k.create_checkpoint_submission("")
+
+# k.create_checkpoint_submission("checkpoint-submission", "https://github.com/LeinbergerDev/kele/commit/5", "2162", "Sent from kele", "34537")
   def create_checkpoint_submission(assignment_branch, assignment_commit_link, checkpoint_id, comment, enrollment_id)
-    response = self.class.post("https://www.bloc.io/api/v1/checkpoint_submissions", values: {assignment_branch: assignment_branch, assignment_commit_link: assignment_commit_link, comment: comment, enrollment_id: enrollment_id}, headers: { "authorization" => @auth_token } )
+    response = self.class.post("https://www.bloc.io/api/v1/checkpoint_submissions", headers: { "authorization" => @auth_token }, body: {
+      assignment_branch: assignment_branch,
+      assignment_commit_link: assignment_commit_link,
+      checkpoint_id: checkpoint_id,
+      comment: comment,
+      enrollment_id: enrollment_id} )
     @submission = JSON.parse(response.body)
+    puts response
   end
 end
